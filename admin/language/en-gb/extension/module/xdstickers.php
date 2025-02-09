@@ -53,6 +53,7 @@ $_['entry_xdstickers_position']     = 'Sticker position';
 
 $_['entry_sticker_title']             = 'Sticker title';
 $_['entry_sticker_text']             = 'Sticker text';
+$_['entry_sticker_tooltip']            = 'Tooltip on hover';
 $_['entry_sticker_color']            = 'Sticker text color';
 $_['entry_sticker_bg']                = 'Sticker background color';
 $_['entry_sticker_property']        = 'Sticker property';

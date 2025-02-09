@@ -53,6 +53,7 @@
 /admin/view/stylesheet/css/*
 !/admin/view/stylesheet/css/
 !/admin/view/stylesheet/css/colorpicker.css
+!/admin/view/stylesheet/css/xdstickers.css
 
 !/admin/view/stylesheet/images/
 
@@ -66,6 +67,15 @@
 
 /catalog/*
 !/catalog/
+/catalog/view/*
+!/catalog/view/
+/catalog/view/theme/*
+!/catalog/view/theme/
+/catalog/view/theme/default/*
+!/catalog/view/theme/default/
+/catalog/view/theme/default/stylesheet/*
+!/catalog/view/theme/default/stylesheet/
+!/catalog/view/theme/default/stylesheet/xdstickers.css
 
 /catalog/model/*
 !/catalog/model/

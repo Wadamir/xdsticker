@@ -9,6 +9,7 @@ class ControllerExtensionModuleXDStickers extends Controller
         $this->document->setTitle($this->language->get('heading_name'));
         $this->document->addScript('view/javascript/jquery/colorpicker.js');
         $this->document->addStyle('view/stylesheet/css/colorpicker.css');
+        $this->document->addStyle('view/stylesheet/css/xdstickers.css');
 
         $data['user_token'] = $this->session->data['user_token'];
 
@@ -87,6 +88,7 @@ class ControllerExtensionModuleXDStickers extends Controller
 
         $data['entry_sticker_title'] = $this->language->get('entry_sticker_title');
         $data['entry_sticker_text'] = $this->language->get('entry_sticker_text');
+        $data['entry_sticker_tooltip'] = $this->language->get('entry_sticker_tooltip');
         $data['entry_sticker_color'] = $this->language->get('entry_sticker_color');
         $data['entry_sticker_bg'] = $this->language->get('entry_sticker_bg');
         $data['entry_sticker_property'] = $this->language->get('entry_sticker_property');

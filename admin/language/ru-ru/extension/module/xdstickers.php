@@ -53,6 +53,7 @@ $_['entry_xdstickers_position']     = 'Позиция стикера';
 
 $_['entry_sticker_title']             = 'Название кастомного стикера';
 $_['entry_sticker_text']             = 'Текст на стикере';
+$_['entry_sticker_tooltip']            = 'Всплывающая подсказка при наведении';
 $_['entry_sticker_color']            = 'Цвет текста стикера';
 $_['entry_sticker_bg']                = 'Цвет фона стикера';
 $_['entry_sticker_property']        = 'Условие для стикера';

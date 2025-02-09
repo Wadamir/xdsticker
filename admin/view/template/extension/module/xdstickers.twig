@@ -114,10 +114,11 @@
 										<thead>
 											<tr>
 												<td class="text-left" style="width: 25%;">{{entry_sticker_text}}</td>
-												<td class="text-left" style="width: 20%;">{{ entry_sticker_color }}</td>
-												<td class="text-left" style="width: 20%;">{{ entry_sticker_bg }}</td>
-												<td class="text-left" style="width: 20%;">{{ entry_sticker_sale_property }}</td>
-												<td class="text-right" style="width: 15%;">{{ entry_sticker_status }}</td>
+                                                <td class="text-left" style="width: 35%;">{{entry_sticker_tooltip}}</td>
+												<td class="text-left" style="width: 10%;">{{ entry_sticker_color }}</td>
+												<td class="text-left" style="width: 10%;">{{ entry_sticker_bg }}</td>
+												<td class="text-right" style="width: 10%;">{{ entry_sticker_sale_property }}</td>
+												<td class="text-right" style="width: 10%;">{{ entry_sticker_status }}</td>
 											</tr>
 										</thead>
 										<tbody>
@@ -132,47 +133,55 @@
 														</div>
 													{% endfor %}
 												</td>
-												<td class="text-left" style="width: 20%;">
+                                                <td class="text-left" style="width: 35%;">
+                                                    {% for language in languages %}
+														{% set cur_language_id = language.language_id %}
+														<div class="input-group pull-left">
+															<span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/>
+															</span>
+															<input type="text" name="xdstickers[sale][tooltip][{{ language.language_id }}]" value="{% if xdstickers.sale.tooltip[cur_language_id] is defined %}{{xdstickers.sale.tooltip[cur_language_id]}}{% endif %}" placeholder="{{entry_sticker_tooltip}}" class="form-control"/>
+														</div>
+													{% endfor %}
+                                                </td>
+												<td class="text-left" style="width: 10%;">
 													<div class="color_input">
 														<div class="input-group">
-															<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+															<span class="input-group-addon">
 																<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.sale.color }};"></i>
 															</span>
 															<input type="text" name="xdstickers[sale][color]" value="{% if xdstickers.sale.color is defined %}{{xdstickers.sale.color}}{% endif %}" class="form-control col-xs-8"/>
 														</div>
 													</div>
 												</td>
-												<td class="text-left" style="width: 20%;">
+												<td class="text-left" style="width: 10%;">
 													<div class="color_input">
 														<div class="input-group">
-															<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+															<span class="input-group-addon">
 																<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.sale.bg }}"></i>
 															</span>
 															<input type="text" name="xdstickers[sale][bg]" value="{% if xdstickers.sale.bg is defined %}{{xdstickers.sale.bg}}{% endif %}" class="form-control col-xs-8"/>
 														</div>
 													</div>
 												</td>
-												<td class="text-right" style="width: 15%;">
-													<select name="xdstickers[sale][discount_status]" class="form-control">
-														{% if xdstickers.sale.discount_status %}
-															<option value="1" selected="selected">{{ text_enabled }}</option>
-															<option value="0">{{ text_disabled }}</option>
-														{% else %}
-															<option value="1">{{ text_enabled }}</option>
-															<option value="0" selected="selected">{{ text_disabled }}</option>
-														{% endif %}
-													</select>
+												<td class="text-right" style="width: 10%;">
+                                                    <div class="form-check form-check-inline form-check-switcher justify-content-end">
+                                                        {% if xdstickers.sale.discount_status %}
+                                                            <input name="xdstickers[sale][discount_status]" id="xdstickersSaleDiscountStatus" value="1" type="checkbox" checked>
+                                                        {% else %}
+                                                            <input name="xdstickers[sale][discount_status]" id="xdstickersSaleDiscountStatus" value="1" type="checkbox">
+                                                        {% endif %}
+                                                        <label for="xdstickersSaleDiscountStatus"></label>
+                                                    </div>
 												</td>
-												<td class="text-right" style="width: 15%;">
-													<select name="xdstickers[sale][status]" class="form-control">
-														{% if xdstickers.sale.status %}
-															<option value="1" selected="selected">{{ text_enabled }}</option>
-															<option value="0">{{ text_disabled }}</option>
-														{% else %}
-															<option value="1">{{ text_enabled }}</option>
-															<option value="0" selected="selected">{{ text_disabled }}</option>
-														{% endif %}
-													</select>
+												<td class="text-right" style="width: 10%;">
+                                                    <div class="form-check form-check-inline form-check-switcher justify-content-end">
+                                                        {% if xdstickers.sale.status %}
+                                                            <input name="xdstickers[sale][status]" id="xdstickersSaleStatus" type="checkbox" checked>
+                                                        {% else %}
+                                                            <input name="xdstickers[sale][status]" id="xdstickersSaleStatus" type="checkbox">
+                                                        {% endif %}
+                                                        <label for="xdstickersSaleStatus"></label>
+                                                    </div>
 												</td>
 											</tr>
 										</tbody>
@@ -209,7 +218,7 @@
 												<td class="text-left" style="width: 20%;">
 													<div class="color_input">
 														<div class="input-group">
-															<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+															<span class="input-group-addon">
 																<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.bestseller.color }};"></i>
 															</span>
 															<input type="text" name="xdstickers[bestseller][color]" value="{% if xdstickers.bestseller.color is defined %}{{xdstickers.bestseller.color}}{% endif %}" class="form-control col-xs-8"/>
@@ -219,7 +228,7 @@
 												<td class="text-left" style="width: 20%;">
 													<div class="color_input">
 														<div class="input-group">
-															<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+															<span class="input-group-addon">
 																<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.bestseller.bg }};"></i>
 															</span>
 															<input type="text" name="xdstickers[bestseller][bg]" value="{% if xdstickers.bestseller.bg is defined %}{{xdstickers.bestseller.bg}}{% endif %}" class="form-control col-xs-8"/>
@@ -275,7 +284,7 @@
 												<td class="text-left" style="width: 20%;">
 													<div class="color_input">
 														<div class="input-group">
-															<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+															<span class="input-group-addon">
 																<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.viewed.color }};"></i>
 															</span>
 															<input type="text" name="xdstickers[viewed][color]" value="{% if xdstickers.viewed.color is defined %}{{xdstickers.viewed.color}}{% endif %}" class="form-control col-xs-8"/>
@@ -285,7 +294,7 @@
 												<td class="text-left" style="width: 20%;">
 													<div class="color_input">
 														<div class="input-group">
-															<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+															<span class="input-group-addon">
 																<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.viewed.bg }};"></i>
 															</span>
 															<input type="text" name="xdstickers[viewed][bg]" value="{% if xdstickers.viewed.bg is defined %}{{xdstickers.viewed.bg}}{% endif %}" class="form-control col-xs-8"/>
@@ -341,7 +350,7 @@
 												<td class="text-left" style="width: 20%;">
 													<div class="color_input">
 														<div class="input-group">
-															<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+															<span class="input-group-addon">
 																<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.novelty.color }};"></i>
 															</span>
 															<input type="text" name="xdstickers[novelty][color]" value="{% if xdstickers.novelty.color is defined %}{{xdstickers.novelty.color}}{% endif %}" class="form-control col-xs-8"/>
@@ -351,7 +360,7 @@
 												<td class="text-left" style="width: 20%;">
 													<div class="color_input">
 														<div class="input-group">
-															<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+															<span class="input-group-addon">
 																<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.novelty.bg }};"></i>
 															</span>
 															<input type="text" name="xdstickers[novelty][bg]" value="{% if xdstickers.novelty.bg is defined %}{{xdstickers.novelty.bg}}{% endif %}" class="form-control col-xs-8"/>
@@ -407,7 +416,7 @@
 												<td class="text-left" style="width: 20%;">
 													<div class="color_input">
 														<div class="input-group">
-															<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+															<span class="input-group-addon">
 																<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.last.color }};"></i>
 															</span>
 															<input type="text" name="xdstickers[last][color]" value="{% if xdstickers.last.color is defined %}{{xdstickers.last.color}}{% endif %}" class="form-control col-xs-8"/>
@@ -417,7 +426,7 @@
 												<td class="text-left" style="width: 20%;">
 													<div class="color_input">
 														<div class="input-group">
-															<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+															<span class="input-group-addon">
 																<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.last.bg }};"></i>
 															</span>
 															<input type="text" name="xdstickers[last][bg]" value="{% if xdstickers.last.bg is defined %}{{xdstickers.last.bg}}{% endif %}" class="form-control col-xs-8"/>
@@ -473,7 +482,7 @@
 												<td class="text-left" style="width: 20%;">
 													<div class="color_input">
 														<div class="input-group">
-															<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+															<span class="input-group-addon">
 																<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.freeshipping.color }};"></i>
 															</span>
 															<input type="text" name="xdstickers[freeshipping][color]" value="{% if xdstickers.freeshipping.color is defined %}{{ xdstickers.freeshipping.color }}{% endif %}" class="form-control col-xs-8"/>
@@ -483,7 +492,7 @@
 												<td class="text-left" style="width: 20%;">
 													<div class="color_input">
 														<div class="input-group">
-															<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+															<span class="input-group-addon">
 																<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.freeshipping.bg }};"></i>
 															</span>
 															<input type="text" name="xdstickers[freeshipping][bg]" value="{% if xdstickers.freeshipping.bg is defined %}{{ xdstickers.freeshipping.bg }}{% endif %}" class="form-control col-xs-8"/>
@@ -544,7 +553,7 @@
 													<td class="text-left" style="width: 20%;">
 														<div class="color_input">
 															<div class="input-group">
-																<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+																<span class="input-group-addon">
 																	<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.stock[stock_status_id].color }};"></i>
 																</span>
 																<input type="text" name="xdstickers[stock][{{ stock_status_id }}][color]" value="{% if xdstickers.stock[stock_status_id].color is defined %}{{xdstickers.stock[stock_status_id].color}}{% endif %}" class="form-control col-xs-8"/>
@@ -554,7 +563,7 @@
 													<td class="text-left" style="width: 20%;">
 														<div class="color_input">
 															<div class="input-group">
-																<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+																<span class="input-group-addon">
 																	<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ xdstickers.stock[stock_status_id].bg }};"></i>
 																</span>
 																<input type="text" name="xdstickers[stock][{{ stock_status_id }}][bg]" value="{% if xdstickers.stock[stock_status_id].bg is defined %}{{xdstickers.stock[stock_status_id].bg}}{% endif %}" class="form-control col-xs-8"/>
@@ -621,7 +630,7 @@
 															<td class="text-left" style="width: 20%;">
 																<div class="color_input">
 																	<div class="input-group">
-																		<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+																		<span class="input-group-addon">
 																			<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ custom_xdsticker.color_color }};"></i>
 																		</span>
 																		<input type="text" value="{{ custom_xdsticker.color_color }}" class="form-control" name="custom_xdsticker[{{ custom_xdsticker_id }}][color_color]"/>
@@ -631,7 +640,7 @@
 															<td class="text-left" style="width: 20%;">
 																<div class="color_input">
 																	<div class="input-group">
-																		<span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;">
+																		<span class="input-group-addon">
 																			<i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style="color:{{ custom_xdsticker.bg_color }};"></i>
 																		</span>
 																		<input type="text" value="{{ custom_xdsticker.bg_color }}" class="form-control" name="custom_xdsticker[{{ custom_xdsticker_id }}][bg_color]"/>
@@ -776,8 +785,8 @@
                 html += '</div>';
             {% endfor %}
             html += '</td>';
-            html += '<td class="text-left color_input" style="width: 20%;"><div class="input-group"><span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;"><i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style=""></i></span><input type="text" name="custom_xdsticker[' + custom_xdsticker_row + '][color_color]" value="" placeholder="{{ entry_sticker_color }}" class="form-control" /></div></td>';
-            html += '<td class="text-left color_input" style="width: 20%;"><div class="input-group"><span class="input-group-addon" style="border-bottom-right-radius:0; border-top-right-radius:0; padding: 4px 8px;"><i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style=""></i></span><input type="text" name="custom_xdsticker[' + custom_xdsticker_row + '][bg_color]" value="" placeholder="{{ entry_sticker_bg }}" class="form-control" /></div></td>';
+            html += '<td class="text-left color_input" style="width: 20%;"><div class="input-group"><span class="input-group-addon"><i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style=""></i></span><input type="text" name="custom_xdsticker[' + custom_xdsticker_row + '][color_color]" value="" placeholder="{{ entry_sticker_color }}" class="form-control" /></div></td>';
+            html += '<td class="text-left color_input" style="width: 20%;"><div class="input-group"><span class="input-group-addon"><i class="fa fa-circle fa-2x fa-fw" aria-hidden="true" style=""></i></span><input type="text" name="custom_xdsticker[' + custom_xdsticker_row + '][bg_color]" value="" placeholder="{{ entry_sticker_bg }}" class="form-control" /></div></td>';
             html += '<td class="text-right" style="width: 10%;"><select name="custom_xdsticker[' + custom_xdsticker_row + '][status]" class="form-control"><option value="1">{{ text_enabled }}</option><option value="0" selected="selected">{{ text_disabled }}</option></select></td>';
             html += '<td class="text-right" style="width: 5%;"><button type="button" onclick="removeCustomXDSticker(' + custom_xdsticker_row + ');" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';
             html += '</tr>';
