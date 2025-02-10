@@ -164,7 +164,7 @@
 
 							if (isset($xdstickers['stock']) && !empty($xdstickers['stock'])) {
 								foreach($xdstickers['stock'] as $key => $value) {
-									if (isset($value['status']) && $value['status'] == '1') {
+									if (isset($value['status']) && boolval($value['status'])) {
 										$data['xdstickers'][] = array(
 											'id'			=> 'xdsticker_stock_' . $key,
 											'bg'			=> $value['bg'],
@@ -229,7 +229,7 @@
 		<operation>
 			<search>
 				<![CDATA[
-					'stock_status'	 => $query->row['stock_status'],
+					$query->row['stock_status'],
 				]]>
 			</search>
 			<add position="after">
@@ -267,58 +267,64 @@
 								$data['xdstickers'][] = array(
 									'id'			=> 'xdsticker_sale',
 									'text'			=> $sale_text,
-                                    'tooltip'		=> htmlspecialchars_decode($xdstickers['sale']['tooltip'][$current_language_id])
+                                    'tooltip'		=> isset($xdstickers['sale']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['sale']['tooltip'][$current_language_id]) : ''
 								);
 							}
-							if ($xdstickers['bestseller']['status'] == '1') {
+							if (isset($xdstickers['bestseller']['status']) && boolval($xdstickers['bestseller']['status'])) {
 								$bestsellers = $this->model_catalog_product->getBestSellerProducts((int)$xdstickers['bestseller']['property']);
 								foreach ($bestsellers as $bestseller) {
 									if ($bestseller['product_id'] == $this->request->get['product_id']) {
 										$data['xdstickers'][] = array(
 											'id'			=> 'xdsticker_bestseller',
-											'text'			=> $xdstickers['bestseller']['text'][$current_language_id]
+											'text'			=> $xdstickers['bestseller']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['bestseller']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['bestseller']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
 							}
 							if(isset($product_info['viewed'])) {
-								if ($xdstickers['viewed']['status'] == '1') {
+								if (isset($xdstickers['viewed']['status']) && boolval($xdstickers['viewed']['status'])) {
 									if ($product_info['viewed'] >= intval($xdstickers['viewed']['property'])) {
 										$data['xdstickers'][] = array(
 											'id'			=> 'xdsticker_viewed',
-											'text'			=> $xdstickers['viewed']['text'][$current_language_id]
+											'text'			=> $xdstickers['viewed']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['viewed']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['viewed']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
 							}
-							if ($xdstickers['novelty']['status'] == '1') {
+							if (isset($xdstickers['novelty']['status']) && boolval($xdstickers['novelty']['status'])) {
 								if ((strtotime($product_info['date_added']) + intval($xdstickers['novelty']['property']) * 24 * 3600) > time()) {
 									$data['xdstickers'][] = array(
 										'id'			=> 'xdsticker_novelty',
-										'text'			=> $xdstickers['novelty']['text'][$current_language_id]
+										'text'			=> $xdstickers['novelty']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['novelty']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['novelty']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['last']['status'] == '1') {
+							if (isset($xdstickers['last']['status']) && boolval($xdstickers['last']['status'])) {
 								if ($product_info['quantity'] <= intval($xdstickers['last']['property']) && $product_info['quantity'] > 0) {
 									$data['xdstickers'][] = array(
 										'id'			=> 'xdsticker_last',
-										'text'			=> $xdstickers['last']['text'][$current_language_id]
+										'text'			=> $xdstickers['last']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['last']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['last']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['freeshipping']['status'] == '1') {
+							if (isset($xdstickers['freeshipping']['status']) && boolval($xdstickers['freeshipping']['status'])) {
 								if(isset($product_info['special']) && $product_info['special'] !== null) {
 									if (floatval($product_info['special']) >= intval($xdstickers['freeshipping']['property'])) {
 										$data['xdstickers'][] = array(
 											'id'			=> 'xdsticker_freeshipping',
-											'text'			=> $xdstickers['freeshipping']['text'][$current_language_id]
+											'text'			=> $xdstickers['freeshipping']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['freeshipping']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['freeshipping']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								} else if (floatval($product_info['price']) >= intval($xdstickers['freeshipping']['property'])) {
 									$data['xdstickers'][] = array(
 										'id'			=> 'xdsticker_freeshipping',
-										'text'			=> $xdstickers['freeshipping']['text'][$current_language_id]
+										'text'			=> $xdstickers['freeshipping']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['freeshipping']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['freeshipping']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
@@ -326,10 +332,11 @@
 							// STOCK stickers
 							if (isset($xdstickers['stock']) && !empty($xdstickers['stock'])) {
 								foreach($xdstickers['stock'] as $key => $value) {
-									if (isset($value['status']) && $value['status'] == '1' && $key == $product_info['stock_status_id'] && $product_info['quantity'] <= 0) {
+									if (isset($value['status']) && boolval($value['status']) && $key == $product_info['stock_status_id'] && $product_info['quantity'] <= 0) {
 										$data['xdstickers'][] = array(
 											'id'			=> 'xdsticker_stock_' . $key,
-											'text'			=> $product_info['stock_status']
+											'text'			=> $product_info['stock_status'],
+                                            'tooltip'		=> isset($value['tooltip'][$current_language_id]) ? htmlspecialchars_decode($value['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
@@ -344,11 +351,12 @@
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker)) {
 										$custom_xdsticker_text = json_decode($custom_xdsticker['text'], true);
 									}
-									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && $custom_xdsticker['status'] == '1') {
+									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && isset($custom_xdsticker['status']) && boolval($custom_xdsticker['status'])) {
 										$custom_sticker_class = 'xdsticker_' . $custom_xdsticker_id['xdsticker_id'];
 										$data['xdstickers'][] = array(
 											'id'			=> $custom_sticker_class,
-											'text'			=> $custom_xdsticker_text[$current_language_id]
+											'text'			=> $custom_xdsticker_text[$current_language_id],
+                                            'tooltip'		=> isset($custom_xdsticker['tooltip'][$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
@@ -370,8 +378,8 @@
 						$product_xdstickers = array();
 						if ($data['xdstickers_status']) {
 							if(isset($result['special'])) {
-								if ($xdstickers['sale']['status'] == '1' && $special) {
-									if ($xdstickers['sale']['discount_status'] == '1') {
+								if (isset($xdstickers['sale']['status']) && boolval($xdstickers['sale']['status']) && $data['special']) {
+									if (isset($xdstickers['sale']['discount_status']) && boolval($xdstickers['sale']['discount_status'])) {
 										$sale_value = ceil((floatval($result['price']) - floatval($result['special'])) / (floatval($result['price']) * 0.01));
 										$sale_text = $xdstickers['sale']['text'][$current_language_id] . ' -' . strval($sale_value) . '%';
 									} else {
@@ -380,59 +388,65 @@
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_sale',
 										'text'			=> $sale_text,
-                                        'tooltip'		=> htmlspecialchars_decode($xdstickers['sale']['tooltip'][$current_language_id])
+                                        'tooltip'		=> isset($xdstickers['sale']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['sale']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['bestseller']['status'] == '1') {
+							if (isset($xdstickers['bestseller']['status']) && boolval($xdstickers['bestseller']['status'])) {
 								$bestsellers = $this->model_catalog_product->getBestSellerProducts((int)$xdstickers['bestseller']['property']);
 								foreach ($bestsellers as $bestseller) {
 									if ($bestseller['product_id'] == $result['product_id']) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_bestseller',
-											'text'			=> $xdstickers['bestseller']['text'][$current_language_id]
+											'text'			=> $xdstickers['bestseller']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['bestseller']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['bestseller']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
 							}
 							if(isset($result['viewed'])) {
-								if ($xdstickers['viewed']['status'] == '1') {
+								if (isset($xdstickers['viewed']['status']) && boolval($xdstickers['viewed']['status'])) {
 									if ($result['viewed'] >= intval($xdstickers['viewed']['property'])) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_viewed',
-											'text'			=> $xdstickers['viewed']['text'][$current_language_id]
+											'text'			=> $xdstickers['viewed']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['viewed']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['viewed']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
 							}
-							if ($xdstickers['novelty']['status'] == '1') {
+							if (isset($xdstickers['novelty']['status']) && boolval($xdstickers['novelty']['status'])) {
 								if ((strtotime($result['date_added']) + intval($xdstickers['novelty']['property']) * 24 * 3600) > time()) {
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_novelty',
-										'text'			=> $xdstickers['novelty']['text'][$current_language_id]
+										'text'			=> $xdstickers['novelty']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['novelty']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['novelty']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['last']['status'] == '1') {
+							if (isset($xdstickers['last']['status']) && boolval($xdstickers['last']['status'])) {
 								if ($result['quantity'] <= intval($xdstickers['last']['property']) && $result['quantity'] > 0) {
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_last',
-										'text'			=> $xdstickers['last']['text'][$current_language_id]
+										'text'			=> $xdstickers['last']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['last']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['last']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['freeshipping']['status'] == '1') {
+							if (isset($xdstickers['freeshipping']['status']) && boolval($xdstickers['freeshipping']['status'])) {
 								if(isset($result['special']) && $result['special'] !== null) {
 									if (floatval($result['special']) >= intval($xdstickers['freeshipping']['property'])) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_freeshipping',
-											'text'			=> $xdstickers['freeshipping']['text'][$current_language_id]
+											'text'			=> $xdstickers['freeshipping']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['freeshipping']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['freeshipping']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								} else if (floatval($result['price']) >= intval($xdstickers['freeshipping']['property'])) {
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_freeshipping',
-										'text'			=> $xdstickers['freeshipping']['text'][$current_language_id]
+										'text'			=> $xdstickers['freeshipping']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['freeshipping']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['freeshipping']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
@@ -440,10 +454,11 @@
 							// STOCK stickers
 							if (isset($xdstickers['stock']) && !empty($xdstickers['stock'])) {
 								foreach($xdstickers['stock'] as $key => $value) {
-									if (isset($value['status']) && $value['status'] == '1' && $key == $result['stock_status_id'] && $result['quantity'] <= 0) {
+									if (isset($value['status']) && boolval($value['status']) && $key == $result['stock_status_id'] && $result['quantity'] <= 0) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_stock_' . $key,
-											'text'			=> $result['stock_status']
+											'text'			=> $result['stock_status'],
+                                            'tooltip'		=> isset($value['tooltip'][$current_language_id]) ? htmlspecialchars_decode($value['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
@@ -458,11 +473,12 @@
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker)) {
 										$custom_xdsticker_text = json_decode($custom_xdsticker['text'], true);
 									}
-									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && $custom_xdsticker['status'] == '1') {
+									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && isset($custom_xdsticker['status']) && boolval($custom_xdsticker['status'])) {
 										$custom_sticker_class = 'xdsticker_' . $custom_xdsticker_id['xdsticker_id'];
 										$product_xdstickers[] = array(
 											'id'			=> $custom_sticker_class,
-											'text'			=> $custom_xdsticker_text[$current_language_id]
+											'text'			=> $custom_xdsticker_text[$current_language_id],
+                                            'tooltip'		=> isset($custom_xdsticker['tooltip'][$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
@@ -499,7 +515,7 @@
 						{% if xdstickers is not empty %}
 						<div class="xdstickers_wrapper {{xdstickers_position}}">
 							{% for xdsticker in xdstickers %}
-                                {% if xdsticker.tooltip is defined %} 
+                                {% if (xdsticker.tooltip is defined) and (xdsticker.tooltip != '') %} 
                                     <div class="dropdown2 xdstickers">
                                         <span class="{{xdsticker.id}} dropdown-toggle">
                                             {{ xdsticker.text }}
@@ -536,9 +552,22 @@
 						{% if product.product_xdstickers is not empty %}
 						<div class="xdstickers_wrapper {{xdstickers_position}}">
 							{% for xdsticker in product.product_xdstickers %}
-								<div class="{{xdsticker.id}} xdstickers">
-									{{xdsticker.text}}
-								</div>
+                                {% if (xdsticker.tooltip is defined) and (xdsticker.tooltip != '') %} 
+                                    <div class="dropdown2 xdstickers">
+                                        <span class="{{xdsticker.id}} dropdown-toggle">
+                                            {{ xdsticker.text }}
+                                        </span>
+                                        <div class="dropdown-menu">
+                                            <div class="xdsticker_tooltip">
+                                                {{ xdsticker.tooltip }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="{{xdsticker.id}} xdstickers">
+                                        {{ xdsticker.text }}
+                                    </div>
+                                {% endif %}
 							{% endfor %}
 						</div>
 						{% endif %}
@@ -566,7 +595,7 @@
 						$data['xdstickers_status'] = $this->config->get('module_xdstickers_status');
 						if ($data['xdstickers_status']) {
 							if(isset($result['special'])) {
-								if ($xdstickers['sale']['status'] == '1' && $special) {
+								if (isset($xdstickers['sale']['status']) && boolval($xdstickers['sale']['status']) && $data['special']) {
 									if ($xdstickers['sale']['discount_status'] == '1') {
 										$sale_value = ceil((floatval($result['price']) - floatval($result['special'])) / (floatval($result['price']) * 0.01));
 										$sale_text = $xdstickers['sale']['text'][$current_language_id] . ' -' . strval($sale_value) . '%';
@@ -575,59 +604,66 @@
 									}
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_sale',
-										'text'			=> $sale_text
+										'text'			=> $sale_text,
+                                        'tooltip'		=> isset($xdstickers['sale']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['sale']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['bestseller']['status'] == '1') {
+							if (isset($xdstickers['bestseller']['status']) && boolval($xdstickers['bestseller']['status'])) {
 								$bestsellers = $this->model_catalog_product->getBestSellerProducts((int)$xdstickers['bestseller']['property']);
 								foreach ($bestsellers as $bestseller) {
 									if ($bestseller['product_id'] == $result['product_id']) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_bestseller',
-											'text'			=> $xdstickers['bestseller']['text'][$current_language_id]
+											'text'			=> $xdstickers['bestseller']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['bestseller']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['bestseller']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
 							}
 							if(isset($result['viewed'])){
-								if ($xdstickers['viewed']['status'] == '1') {
+								if (isset($xdstickers['viewed']['status']) && boolval($xdstickers['viewed']['status'])) {
 									if ($result['viewed'] >= intval($xdstickers['viewed']['property'])) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_viewed',
-											'text'			=> $xdstickers['viewed']['text'][$current_language_id]
+											'text'			=> $xdstickers['viewed']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['viewed']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['viewed']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}							
 							}
-							if ($xdstickers['novelty']['status'] == '1') {
+							if (isset($xdstickers['novelty']['status']) && boolval($xdstickers['novelty']['status'])) {
 								if ((strtotime($result['date_added']) + intval($xdstickers['novelty']['property']) * 24 * 3600) > time()) {
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_novelty',
-										'text'			=> $xdstickers['novelty']['text'][$current_language_id]
+										'text'			=> $xdstickers['novelty']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['novelty']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['novelty']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['last']['status'] == '1') {
+							if (isset($xdstickers['last']['status']) && boolval($xdstickers['last']['status'])) {
 								if ($result['quantity'] <= intval($xdstickers['last']['property']) && $result['quantity'] > 0) {
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_last',
-										'text'			=> $xdstickers['last']['text'][$current_language_id]
+										'text'			=> $xdstickers['last']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['last']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['last']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['freeshipping']['status'] == '1') {
+							if (isset($xdstickers['freeshipping']['status']) && boolval($xdstickers['freeshipping']['status'])) {
 								if(isset($result['special']) && $result['special'] !== null) {
 									if (floatval($result['special']) >= intval($xdstickers['freeshipping']['property'])) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_freeshipping',
-											'text'			=> $xdstickers['freeshipping']['text'][$current_language_id]
+											'text'			=> $xdstickers['freeshipping']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['freeshipping']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['freeshipping']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								} else if (floatval($result['price']) >= intval($xdstickers['freeshipping']['property'])) {
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_freeshipping',
-										'text'			=> $xdstickers['freeshipping']['text'][$current_language_id]
+										'text'			=> $xdstickers['freeshipping']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['freeshipping']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['freeshipping']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
@@ -635,10 +671,11 @@
 							// STOCK stickers
 							if (isset($xdstickers['stock']) && !empty($xdstickers['stock'])) {
 								foreach($xdstickers['stock'] as $key => $value) {
-									if (isset($value['status']) && $value['status'] == '1' && $key == $result['stock_status_id'] && $result['quantity'] <= 0) {
+									if (isset($value['status']) && boolval($value['status']) && $key == $result['stock_status_id'] && $result['quantity'] <= 0) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_stock_' . $key,
-											'text'			=> $result['stock_status']
+											'text'			=> $result['stock_status'],
+                                            'tooltip'		=> isset($value['tooltip'][$current_language_id]) ? htmlspecialchars_decode($value['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
@@ -653,11 +690,12 @@
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker)) {
 										$custom_xdsticker_text = json_decode($custom_xdsticker['text'], true);
 									}
-									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && $custom_xdsticker['status'] == '1') {
+									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && isset($custom_xdsticker['status']) && boolval($custom_xdsticker['status'])) {
 										$custom_sticker_class = 'xdsticker_' . $custom_xdsticker_id['xdsticker_id'];
 										$product_xdstickers[] = array(
 											'id'			=> $custom_sticker_class,
-											'text'			=> $custom_xdsticker_text[$current_language_id]
+											'text'			=> $custom_xdsticker_text[$current_language_id],
+                                            'tooltip'		=> isset($custom_xdsticker['tooltip'][$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
@@ -695,7 +733,22 @@
 						<div class="xdstickers_wrapper {{xdstickers_position}}">
 							{% for xdsticker in product.product_xdstickers %}
 								<div class="{{xdsticker.id}} xdstickers">
-									{{xdsticker.text}}
+                                    {% if (xdsticker.tooltip is defined) and (xdsticker.tooltip != '') %} 
+                                        <div class="dropdown2 xdstickers">
+                                            <span class="{{xdsticker.id}} dropdown-toggle">
+                                                {{ xdsticker.text }}
+                                            </span>
+                                            <div class="dropdown-menu">
+                                                <div class="xdsticker_tooltip">
+                                                    {{ xdsticker.tooltip }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="{{xdsticker.id}} xdstickers">
+                                            {{ xdsticker.text }}
+                                        </div>
+                                    {% endif %}
 								</div>
 							{% endfor %}
 						</div>
@@ -724,8 +777,8 @@
 						$data['xdstickers_status'] = $this->config->get('module_xdstickers_status');
 						if ($data['xdstickers_status']) {
 							if(isset($result['special'])) {
-								if ($xdstickers['sale']['status'] == '1' && $special) {
-									if ($xdstickers['sale']['discount_status'] == '1') {
+								if (isset($xdstickers['sale']['status']) && boolval($xdstickers['sale']['status']) && $special) {
+									if (isset($xdstickers['sale']['discount_status']) && boolval($xdstickers['sale']['discount_status'])) {
 										$sale_value = ceil((floatval($result['price']) - floatval($result['special'])) / (floatval($result['price']) * 0.01));
 										$sale_text = $xdstickers['sale']['text'][$current_language_id] . ' -' . strval($sale_value) . '%';
 									} else {
@@ -733,59 +786,66 @@
 									}
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_sale',
-										'text'			=> $sale_text
+										'text'			=> $sale_text,
+                                        'tooltip'		=> isset($xdstickers['sale']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['sale']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['bestseller']['status'] == '1') {
+							if (isset($xdstickers['bestseller']['status']) && boolval($xdstickers['bestseller']['status'])) {
 								$bestsellers = $this->model_catalog_product->getBestSellerProducts((int)$xdstickers['bestseller']['property']);
 								foreach ($bestsellers as $bestseller) {
 									if ($bestseller['product_id'] == $result['product_id']) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_bestseller',
-											'text'			=> $xdstickers['bestseller']['text'][$current_language_id]
+											'text'			=> $xdstickers['bestseller']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['bestseller']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['bestseller']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
 							}
 							if(isset($result['viewed'])) {
-								if ($xdstickers['viewed']['status'] == '1') {
+								if (isset($xdstickers['viewed']['status']) && boolval($xdstickers['viewed']['status'])) {
 									if ($result['viewed'] >= intval($xdstickers['viewed']['property'])) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_viewed',
-											'text'			=> $xdstickers['viewed']['text'][$current_language_id]
+											'text'			=> $xdstickers['viewed']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['viewed']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['viewed']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}							
 							}
-							if ($xdstickers['novelty']['status'] == '1') {
+							if (isset($xdstickers['novelty']['status']) && boolval($xdstickers['novelty']['status'])) {
 								if ((strtotime($result['date_added']) + intval($xdstickers['novelty']['property']) * 24 * 3600) > time()) {
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_novelty',
-										'text'			=> $xdstickers['novelty']['text'][$current_language_id]
+										'text'			=> $xdstickers['novelty']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['novelty']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['novelty']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['last']['status'] == '1') {
+							if (isset($xdstickers['last']['status']) && boolval($xdstickers['last']['status'])) {
 								if ($result['quantity'] <= intval($xdstickers['last']['property']) && $result['quantity'] > 0) {
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_last',
-										'text'			=> $xdstickers['last']['text'][$current_language_id]
+										'text'			=> $xdstickers['last']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['last']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['last']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['freeshipping']['status'] == '1') {
+							if (isset($xdstickers['freeshipping']['status']) && boolval($xdstickers['freeshipping']['status'])) {
 								if(isset($result['special']) && $result['special'] !== null) {
 									if (floatval($result['special']) >= intval($xdstickers['freeshipping']['property'])) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_freeshipping',
-											'text'			=> $xdstickers['freeshipping']['text'][$current_language_id]
+											'text'			=> $xdstickers['freeshipping']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['freeshipping']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['freeshipping']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								} else if (floatval($result['price']) >= intval($xdstickers['freeshipping']['property'])) {
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_freeshipping',
-										'text'			=> $xdstickers['freeshipping']['text'][$current_language_id]
+										'text'			=> $xdstickers['freeshipping']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['freeshipping']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['freeshipping']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
@@ -793,10 +853,11 @@
 							// STOCK stickers
 							if (isset($xdstickers['stock']) && !empty($xdstickers['stock'])) {
 								foreach($xdstickers['stock'] as $key => $value) {
-									if (isset($value['status']) && $value['status'] == '1' && $key == $result['stock_status_id'] && $result['quantity'] <= 0) {
+									if (isset($value['status']) && boolval($value['status']) && $key == $result['stock_status_id'] && $result['quantity'] <= 0) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_stock_' . $key,
-											'text'			=> $result['stock_status']
+											'text'			=> $result['stock_status'],
+                                            'tooltip'		=> isset($value['tooltip'][$current_language_id]) ? htmlspecialchars_decode($value['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
@@ -811,11 +872,12 @@
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker)) {
 										$custom_xdsticker_text = json_decode($custom_xdsticker['text'], true);
 									}
-									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && $custom_xdsticker['status'] == '1') {
+									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && isset($custom_xdsticker['status']) && boolval($custom_xdsticker['status'])) {
 										$custom_sticker_class = 'xdsticker_' . $custom_xdsticker_id['xdsticker_id'];
 										$product_xdstickers[] = array(
 											'id'			=> $custom_sticker_class,
-											'text'			=> $custom_xdsticker_text[$current_language_id]
+											'text'			=> $custom_xdsticker_text[$current_language_id],
+                                            'tooltip'		=> isset($custom_xdsticker['tooltip'][$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
@@ -855,9 +917,9 @@
 						$data['xdstickers_position'] = ($xdstickers['position'] == '0') ? ' position_upleft' : ' position_upright';
 						$data['xdstickers_status'] = $this->config->get('module_xdstickers_status');
 						if ($data['xdstickers_status']) {
-							if ($xdstickers['sale']['status'] == '1' && $special) {
+							if (isset($xdstickers['sale']['status']) && boolval($xdstickers['sale']['status']) && $special) {
 								if(isset($product_info['special'])) {
-									if ($xdstickers['sale']['discount_status'] == '1') {
+									if (isset($xdstickers['sale']['discount_status']) && boolval($xdstickers['sale']['discount_status'])) {
 										$sale_value = ceil((floatval($product_info['price']) - floatval($product_info['special'])) / (floatval($product_info['price']) * 0.01));
 										$sale_text = $xdstickers['sale']['text'][$current_language_id] . ' -' . strval($sale_value) . '%';
 									} else {
@@ -865,59 +927,66 @@
 									}								
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_sale',
-										'text'			=> $sale_text
+										'text'			=> $sale_text,
+                                        'tooltip'		=> isset($xdstickers['sale']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['sale']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['bestseller']['status'] == '1') {
+							if (isset($xdstickers['bestseller']['status']) && boolval($xdstickers['bestseller']['status'])) {
 								$bestsellers = $this->model_catalog_product->getBestSellerProducts((int)$xdstickers['bestseller']['property']);
 								foreach ($bestsellers as $bestseller) {
 									if ($bestseller['product_id'] == $product_info['product_id']) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_bestseller',
-											'text'			=> $xdstickers['bestseller']['text'][$current_language_id]
+											'text'			=> $xdstickers['bestseller']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['bestseller']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['bestseller']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
 							}
 							if(isset($product_info['viewed'])) {
-								if ($xdstickers['viewed']['status'] == '1') {
+								if (isset($xdstickers['viewed']['status']) && boolval($xdstickers['viewed']['status'])) {
 									if ($product_info['viewed'] >= intval($xdstickers['viewed']['property'])) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_viewed',
-											'text'			=> $xdstickers['viewed']['text'][$current_language_id]
+											'text'			=> $xdstickers['viewed']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['viewed']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['viewed']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}					
 							}		
-							if ($xdstickers['novelty']['status'] == '1') {
+							if (isset($xdstickers['novelty']['status']) && boolval($xdstickers['novelty']['status'])) {
 								if ((strtotime($product_info['date_added']) + intval($xdstickers['novelty']['property']) * 24 * 3600) > time()) {
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_novelty',
-										'text'			=> $xdstickers['novelty']['text'][$current_language_id]
+										'text'			=> $xdstickers['novelty']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['novelty']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['novelty']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['last']['status'] == '1') {
+							if (isset($xdstickers['last']['status']) && boolval($xdstickers['last']['status'])) {
 								if ($product_info['quantity'] <= intval($xdstickers['last']['property']) && $product_info['quantity'] > 0) {
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_last',
-										'text'			=> $xdstickers['last']['text'][$current_language_id]
+										'text'			=> $xdstickers['last']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['last']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['last']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
-							if ($xdstickers['freeshipping']['status'] == '1') {
+							if (isset($xdstickers['freeshipping']['status']) && boolval($xdstickers['freeshipping']['status'])) {
 								if(isset($product_info['special']) && $product_info['special'] !== null) {
 									if (floatval($product_info['special']) >= intval($xdstickers['freeshipping']['property'])) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_freeshipping',
-											'text'			=> $xdstickers['freeshipping']['text'][$current_language_id]
+											'text'			=> $xdstickers['freeshipping']['text'][$current_language_id],
+                                            'tooltip'		=> isset($xdstickers['freeshipping']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['freeshipping']['tooltip'][$current_language_id]) : ''
 										);
 									}
 								} else if (floatval($product_info['price']) >= intval($xdstickers['freeshipping']['property'])) {
 									$product_xdstickers[] = array(
 										'id'			=> 'xdsticker_freeshipping',
-										'text'			=> $xdstickers['freeshipping']['text'][$current_language_id]
+										'text'			=> $xdstickers['freeshipping']['text'][$current_language_id],
+                                        'tooltip'		=> isset($xdstickers['freeshipping']['tooltip'][$current_language_id]) ? htmlspecialchars_decode($xdstickers['freeshipping']['tooltip'][$current_language_id]) : ''
 									);
 								}
 							}
@@ -925,10 +994,11 @@
 							// STOCK stickers
 							if (isset($xdstickers['stock']) && !empty($xdstickers['stock'])) {
 								foreach($xdstickers['stock'] as $key => $value) {
-									if (isset($value['status']) && $value['status'] == '1' && $key == $product_info['stock_status_id'] && $product_info['quantity'] <= 0) {
+									if (isset($value['status']) && boolval($value['status']) && $key == $product_info['stock_status_id'] && $product_info['quantity'] <= 0) {
 										$product_xdstickers[] = array(
 											'id'			=> 'xdsticker_stock_' . $key,
-											'text'			=> $product_info['stock_status']
+											'text'			=> $product_info['stock_status'],
+                                            'tooltip'		=> isset($value['tooltip'][$current_language_id]) ? htmlspecialchars_decode($value['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
@@ -943,11 +1013,12 @@
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker)) {
 										$custom_xdsticker_text = json_decode($custom_xdsticker['text'], true);
 									}
-									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && $custom_xdsticker['status'] == '1') {
+									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && isset($custom_xdsticker['status']) && boolval($custom_xdsticker['status'])) {
 										$custom_sticker_class = 'xdsticker_' . $custom_xdsticker_id['xdsticker_id'];
 										$product_xdstickers[] = array(
 											'id'			=> $custom_sticker_class,
-											'text'			=> $custom_xdsticker_text[$current_language_id]
+											'text'			=> $custom_xdsticker_text[$current_language_id],
+                                            'tooltip'		=> isset($custom_xdsticker['tooltip'][$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker['tooltip'][$current_language_id]) : ''
 										);
 									}
 								}
@@ -985,7 +1056,22 @@
 						<div class="xdstickers_wrapper {{xdstickers_position}}">
 							{% for xdsticker in product.product_xdstickers %}
 								<div class="{{xdsticker.id}} xdstickers">
-									{{xdsticker.text}}
+                                    {% if (xdsticker.tooltip is defined) and (xdsticker.tooltip != '') %} 
+                                        <div class="dropdown2 xdstickers">
+                                            <span class="{{xdsticker.id}} dropdown-toggle">
+                                                {{ xdsticker.text }}
+                                            </span>
+                                            <div class="dropdown-menu">
+                                                <div class="xdsticker_tooltip">
+                                                    {{ xdsticker.tooltip }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="{{xdsticker.id}} xdstickers">
+                                            {{ xdsticker.text }}
+                                        </div>
+                                    {% endif %}
 								</div>
 							{% endfor %}
 						</div>

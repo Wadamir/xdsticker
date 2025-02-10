@@ -53,3 +53,7 @@
 .color_input>.input-group>.input-group-addon {
     padding: 3px 3px;
 }
+
+.input-group+.input-group {
+    margin-top: 8px;
+}

@@ -3,7 +3,8 @@ class ModelExtensionModuleXDStickers extends Model
 {
     public function addCustomXDSticker($data)
     {
-        $this->db->query("INSERT INTO " . DB_PREFIX . "xdstickers SET xdsticker_id = '" . (int)$this->db->escape($data['xdsticker_id']) . "', name = '" . $this->db->escape($data['name']) . "', text = '" . $this->db->escape(json_encode($data['text'])) . "', bg_color = '" . $this->db->escape($data['bg_color']) . "', color_color = '" . $this->db->escape($data['color_color']) . "', status = '" . (int)$data['status'] . "'");
+        $xdsticker_status = (isset($data['status']) && boolval($data['status'])) ? 1 : 0;
+        $this->db->query("INSERT INTO " . DB_PREFIX . "xdstickers SET xdsticker_id = '" . (int)$this->db->escape($data['xdsticker_id']) . "', name = '" . $this->db->escape($data['name']) . "', text = '" . $this->db->escape(json_encode($data['text'])) . "', bg_color = '" . $this->db->escape($data['bg_color']) . "', color_color = '" . $this->db->escape($data['color_color']) . "', status = '" . $xdsticker_status . "'");
         return $this->db->getLastId();
     }
 
