@@ -350,13 +350,14 @@
 									$custom_xdsticker = $this->model_extension_module_xdstickers->getCustomXDSticker($custom_xdsticker_id['xdsticker_id']);
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker)) {
 										$custom_xdsticker_text = json_decode($custom_xdsticker['text'], true);
+                                        $custom_xdsticker_tooltip = json_decode($custom_xdsticker['tooltip'], true);
 									}
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && isset($custom_xdsticker['status']) && boolval($custom_xdsticker['status'])) {
 										$custom_sticker_class = 'xdsticker_' . $custom_xdsticker_id['xdsticker_id'];
 										$data['xdstickers'][] = array(
 											'id'			=> $custom_sticker_class,
 											'text'			=> $custom_xdsticker_text[$current_language_id],
-                                            'tooltip'		=> isset($custom_xdsticker['tooltip'][$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker['tooltip'][$current_language_id]) : ''
+                                            'tooltip'		=> isset($custom_xdsticker_tooltip[$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker_tooltip[$current_language_id]) : ''
 										);
 									}
 								}
@@ -472,13 +473,14 @@
 									$custom_xdsticker = $this->model_extension_module_xdstickers->getCustomXDSticker($custom_xdsticker_id['xdsticker_id']);
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker)) {
 										$custom_xdsticker_text = json_decode($custom_xdsticker['text'], true);
+                                        $custom_xdsticker_tooltip = json_decode($custom_xdsticker['tooltip'], true);
 									}
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && isset($custom_xdsticker['status']) && boolval($custom_xdsticker['status'])) {
 										$custom_sticker_class = 'xdsticker_' . $custom_xdsticker_id['xdsticker_id'];
 										$product_xdstickers[] = array(
 											'id'			=> $custom_sticker_class,
 											'text'			=> $custom_xdsticker_text[$current_language_id],
-                                            'tooltip'		=> isset($custom_xdsticker['tooltip'][$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker['tooltip'][$current_language_id]) : ''
+                                            'tooltip'		=> isset($custom_xdsticker_tooltip[$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker_tooltip[$current_language_id]) : ''
 										);
 									}
 								}
@@ -689,13 +691,14 @@
 									$custom_xdsticker = $this->model_extension_module_xdstickers->getCustomXDSticker($custom_xdsticker_id['xdsticker_id']);
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker)) {
 										$custom_xdsticker_text = json_decode($custom_xdsticker['text'], true);
+                                        $custom_xdsticker_tooltip = json_decode($custom_xdsticker['tooltip'], true);
 									}
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && isset($custom_xdsticker['status']) && boolval($custom_xdsticker['status'])) {
 										$custom_sticker_class = 'xdsticker_' . $custom_xdsticker_id['xdsticker_id'];
 										$product_xdstickers[] = array(
 											'id'			=> $custom_sticker_class,
 											'text'			=> $custom_xdsticker_text[$current_language_id],
-                                            'tooltip'		=> isset($custom_xdsticker['tooltip'][$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker['tooltip'][$current_language_id]) : ''
+                                            'tooltip'		=> isset($custom_xdsticker_tooltip[$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker_tooltip[$current_language_id]) : ''
 										);
 									}
 								}
@@ -871,13 +874,14 @@
 									$custom_xdsticker = $this->model_extension_module_xdstickers->getCustomXDSticker($custom_xdsticker_id['xdsticker_id']);
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker)) {
 										$custom_xdsticker_text = json_decode($custom_xdsticker['text'], true);
+                                        $custom_xdsticker_tooltip = json_decode($custom_xdsticker['tooltip'], true);
 									}
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && isset($custom_xdsticker['status']) && boolval($custom_xdsticker['status'])) {
 										$custom_sticker_class = 'xdsticker_' . $custom_xdsticker_id['xdsticker_id'];
 										$product_xdstickers[] = array(
 											'id'			=> $custom_sticker_class,
 											'text'			=> $custom_xdsticker_text[$current_language_id],
-                                            'tooltip'		=> isset($custom_xdsticker['tooltip'][$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker['tooltip'][$current_language_id]) : ''
+                                            'tooltip'		=> isset($custom_xdsticker_tooltip[$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker_tooltip[$current_language_id]) : ''
 										);
 									}
 								}
@@ -1012,13 +1016,14 @@
 									$custom_xdsticker = $this->model_extension_module_xdstickers->getCustomXDSticker($custom_xdsticker_id['xdsticker_id']);
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker)) {
 										$custom_xdsticker_text = json_decode($custom_xdsticker['text'], true);
+                                        $custom_xdsticker_tooltip = json_decode($custom_xdsticker['tooltip'], true);
 									}
 									if (isset($custom_xdsticker) && !empty($custom_xdsticker) && isset($custom_xdsticker['status']) && boolval($custom_xdsticker['status'])) {
 										$custom_sticker_class = 'xdsticker_' . $custom_xdsticker_id['xdsticker_id'];
 										$product_xdstickers[] = array(
 											'id'			=> $custom_sticker_class,
 											'text'			=> $custom_xdsticker_text[$current_language_id],
-                                            'tooltip'		=> isset($custom_xdsticker['tooltip'][$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker['tooltip'][$current_language_id]) : ''
+                                            'tooltip'		=> isset($custom_xdsticker_tooltip[$current_language_id]) ? htmlspecialchars_decode($custom_xdsticker_tooltip[$current_language_id]) : ''
 										);
 									}
 								}
